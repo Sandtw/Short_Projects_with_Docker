@@ -1,0 +1,12 @@
+FROM python:3.9
+
+WORKDIR /test_image
+
+# COPY /  /test_image/
+COPY . .
+
+RUN pip install tensorflow
+RUN pip install -r requirements.txt
+
+ENTRYPOINT [ "python", "fashion_mnist.py" ]
+

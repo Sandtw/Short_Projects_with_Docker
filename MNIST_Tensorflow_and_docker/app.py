@@ -1,9 +1,9 @@
 from flask import Flask, jsonify, request
 import numpy as np
-from fashion_mnist import classFashionMNIST, fashionMNIST
+from fashion_mnist import classFashionMNIST
 from fashion_config import Config as cfg
 import logging
-import absl.logging
+import absl
 
 app = Flask(__name__)
 
@@ -41,8 +41,8 @@ def train():
                                                    cfg.LEARNING_RATE,
                                                    cfg.BATCH_SIZE)
     
-    val_acc=str(np.average(history.history['val_acc']))
-    acc=str(np.average(history.history['acc']))
+    val_acc=str(np.average(history.history['val_accuracy']))
+    acc=str(np.average(history.history['accuracy']))
     result={'val accuracy':val_acc, 'acc':acc}
     return jsonify(result)
 
@@ -53,7 +53,7 @@ if __name__ == '__main__':
     logging.basicConfig(filename=cfg.LOG_FILENAME, filemode='a', format='%(filename)s-%(asctime)s %(msecs)d- %(process)d-%(levelname)s - %(message)s',
                         datefmt='%d-%b-%y %H:%M:%S %p',
                         level=logging.DEBUG)
-    # fashionMNIST = classFashionMNIST(cfg.IMAGE_HEIGHT, cfg.IMAGE_WIDTH, cfg.DATA_SIZE, cfg.CLASS_NAME)
+    fashionMNIST = classFashionMNIST(cfg.IMAGE_HEIGHT, cfg.IMAGE_WIDTH, cfg.DATA_SIZE, cfg.CLASS_NAME)
     fashionMNIST.normalize_data()
     history, model = fashionMNIST.train_model(cfg.WEIGHT_FILENAME, 
                                                    cfg.EPOCHS,
@@ -61,4 +61,4 @@ if __name__ == '__main__':
                                                    cfg.LEARNING_RATE,
                                                    cfg.BATCH_SIZE)
     
-    app.run(debug=True)
+    app.run()

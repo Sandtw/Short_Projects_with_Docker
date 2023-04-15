@@ -4,8 +4,6 @@ import matplotlib.pyplot as plt
 import sys
 import logging
 from tensorflow import keras
-from fashion_config import Config as cfg
-import absl
 
 np.random.seed(1)
 
@@ -117,7 +115,6 @@ class classFashionMNIST:
         ''' 
         try:
             model = self.create_model(optimizer, learning_rate)
-            print(model.summary())
             logging.info("Model created")
 
             logging.info("Normalizing the data")
@@ -126,10 +123,7 @@ class classFashionMNIST:
 
             logging.info("Training started")
 
-
-            print(self.train_images)
-            print(self.train_labels)
-            stop = keras.callbacks.EarlyStopping(monitor = 'val_accuracy' , patience=30, min_delta = 0.01, restore_best_weights=True)
+            stop = keras.callbacks.EarlyStopping(monitor = 'val_accuracy' , patience=20, min_delta = 0.01, restore_best_weights=True)
 
             history = model.fit(self.train_images,
                                 self.train_labels,
@@ -199,11 +193,3 @@ class classFashionMNIST:
         except:
             logging.error(" Error during visualization - %s", sys.exc_info())
 
-print('In logging')
-logging.root.removeHandler(absl.logging._absl_handler)
-absl.logging._warn_preinit_stderr = False
-logging.basicConfig(filename=cfg.LOG_FILENAME, filemode='a', format='%(filename)s-%(asctime)s %(msecs)d- %(process)d-%(levelname)s - %(message)s',datefmt='%d-%b-%y %H:%M:%S %p',level=logging.DEBUG)
-
-fashionMNIST = classFashionMNIST(cfg.IMAGE_HEIGHT, cfg.IMAGE_WIDTH, cfg.DATA_SIZE, cfg.CLASS_NAME)
-print(fashionMNIST.predict_data(5, cfg.WEIGHT_FILENAME))
-fashionMNIST.visualize(5)
